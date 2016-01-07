@@ -1,10 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.*;
+import java.awt.event.*;
 
-public class Calculator extends JPanel{
+public class Calculator extends JPanel implements ActionListener{
+
+	class ComputationException extends Exception{
+  		public ComputationException(String message)
+  		{
+   			super(message);
+ 		}
+ 	}
 
 	private JButton[] numButtons;
+	private final int numOfButtons = 10;
 	private JButton decButton;
 	private JButton addButton;
 	private JButton subButton;
@@ -14,10 +23,11 @@ public class Calculator extends JPanel{
 	private JButton powButton;
 	private JButton modButton;
 
-	private final Dimension BUTTON_DIM = new Dimension(70,70);
+	private final Dimension BUTTON_DIM = new Dimension(90,90);
 	private final Font buttonFont = new Font("Serif", Font.BOLD, 24);
 	private JPanel buttonPanel, screenPanel;
 	private JLabel screen;
+	private String text = "";
 
 	public Calculator()
 	{	
@@ -39,7 +49,7 @@ public class Calculator extends JPanel{
 
 		screenPanel = new JPanel();
 		screenPanel.setBorder(screenPanelBorder);
-		screenPanel.setBackground(Color.WHITE);
+		screenPanel.setBackground(Color.GRAY);
 		add(screenPanel, BorderLayout.NORTH);
 
 		buttonPanel = new JPanel();
@@ -51,7 +61,7 @@ public class Calculator extends JPanel{
 
 	public void initScreen()
 	{
-		screen = new JLabel(" ");
+		screen = new JLabel("hhkhk ");
 		screen.setFont(new Font("Serif", Font.PLAIN, 45) );
 		screenPanel.add(screen);
 	}
@@ -83,7 +93,6 @@ public class Calculator extends JPanel{
 
 	public void addNumberButtons(GridBagConstraints gbc)
 	{
-		int numOfButtons = 10;
 		numButtons = new JButton[numOfButtons];
 		int xPos = 3;
 		int yPos = 1;
@@ -91,6 +100,7 @@ public class Calculator extends JPanel{
 		for(int i = 0; i < numOfButtons; i++)
 		{
 			numButtons[i] = new JButton(""+i);
+			numButtons[i].addActionListener(this);
 			numButtons[i].setFont(buttonFont);
 			numButtons[i].setPreferredSize(BUTTON_DIM);
 		}
@@ -120,6 +130,7 @@ public class Calculator extends JPanel{
 	public void addOperatorButtons(GridBagConstraints gbc)
 	{
 		addButton = new JButton("+");
+		addButton.addActionListener(this);
 		addButton.setPreferredSize(BUTTON_DIM);
 		addButton.setFont(buttonFont);
 		gbc.gridx = 4;
@@ -127,6 +138,7 @@ public class Calculator extends JPanel{
 		buttonPanel.add(addButton, gbc);
 
 		subButton = new JButton("-");
+		subButton.addActionListener(this);
 		subButton.setPreferredSize(BUTTON_DIM);
 		subButton.setFont(buttonFont);
 		gbc.gridx = 4;
@@ -135,12 +147,14 @@ public class Calculator extends JPanel{
 
 		multButton = new JButton("*");
 		multButton.setPreferredSize(BUTTON_DIM);
+		multButton.addActionListener(this);
 		multButton.setFont(buttonFont);
 		gbc.gridx = 4;
 		gbc.gridy = 1;
 		buttonPanel.add(multButton, gbc);
 
 		divButton = new JButton("/");
+		divButton.addActionListener(this);
 		divButton.setPreferredSize(BUTTON_DIM);
 		divButton.setFont(buttonFont);
 		gbc.gridx = 4;
@@ -148,6 +162,7 @@ public class Calculator extends JPanel{
 		buttonPanel.add(divButton, gbc);
 
 		powButton = new JButton("^");
+		powButton.addActionListener(this);
 		powButton.setPreferredSize(BUTTON_DIM);
 		powButton.setFont(buttonFont);
 		gbc.gridx = 0;
@@ -155,10 +170,78 @@ public class Calculator extends JPanel{
 		buttonPanel.add(powButton, gbc);
 
 		modButton = new JButton("%");
+		modButton.addActionListener(this);
 		modButton.setPreferredSize(BUTTON_DIM);
 		modButton.setFont(buttonFont);
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		buttonPanel.add(modButton, gbc);
 	}
+
+	public void actionPerformed(ActionEvent event) 
+	{  
+		for(int i = 0; i < numOfButtons; i++)
+		{
+			if(event.getSource() == numButtons[i])
+			{
+				text += numButtons[i].getText();	
+			}
+		}
+
+		if(event.getSource() == addButton)
+		{
+			text += "+";
+		}
+		else if (event.getSource() == subButton)
+		{
+			text += "-";
+		}
+		else if (event.getSource() == multButton)
+		{
+			text += "*";
+		}
+		else if(event.getSource() == divButton)
+		{
+			text += "/";
+		}
+		else if (event.getSource() == powButton)
+		{
+			text += "^";
+		}
+		else if (event.getSource() == modButton)
+		{
+			text += "%";
+		}
+		else if (event.getSource() == equalButton)
+		{
+			try{
+				double result = evaluate(text);
+				text = ""+result;
+			}
+			catch(Exception ex)
+			{
+				text = ex.getMessage();
+			}
+		}
+		screen.setText(text);
+	} 
+
+
+	public double evaluate(String text) throws Exception
+	{
+		Evaluater obj = new Evaluater();
+
+		try{
+			double result = obj.calculate(text);
+			return result;
+		}
+		catch(Exception ex){
+			throw new ComputationException("Format Exception");
+		}	
+		
+
+	}
 }
+
+
+
