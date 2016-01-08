@@ -5,13 +5,6 @@ import java.awt.event.*;
 
 public class Calculator extends JPanel implements ActionListener{
 
-	class ComputationException extends Exception{
-  		public ComputationException(String message)
-  		{
-   			super(message);
- 		}
- 	}
-
 	private JButton[] numButtons;
 	private final int numOfButtons = 10;
 	private JButton decButton;
@@ -22,6 +15,9 @@ public class Calculator extends JPanel implements ActionListener{
 	private JButton equalButton;
 	private JButton powButton;
 	private JButton modButton;
+	private JButton clearButton;
+	private JButton leftParenButton;
+	private JButton rightParenButton;
 
 	private final Dimension BUTTON_DIM = new Dimension(90,90);
 	private final Font buttonFont = new Font("Serif", Font.BOLD, 24);
@@ -61,22 +57,45 @@ public class Calculator extends JPanel implements ActionListener{
 
 	public void initScreen()
 	{
-		screen = new JLabel("hhkhk ");
+		screen = new JLabel(" ");
 		screen.setFont(new Font("Serif", Font.PLAIN, 45) );
 		screenPanel.add(screen);
 	}
 
 	public void initButtons()
 	{
-		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(3,3,3,3);
 		
 		addNumberButtons(gbc);
 		addOperatorButtons(gbc);
 
-		
+		clearButton = new JButton("clear");
+		clearButton.addActionListener(this);
+		clearButton.setPreferredSize(BUTTON_DIM);
+		clearButton.setFont(buttonFont);
+		gbc.gridx = 3;
+		gbc.gridy = 0;
+		buttonPanel.add(clearButton, gbc);
+
+		leftParenButton = new JButton("(");
+		leftParenButton.addActionListener(this);
+		leftParenButton.setPreferredSize(BUTTON_DIM);
+		leftParenButton.setFont(buttonFont);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		buttonPanel.add(leftParenButton, gbc);
+
+		rightParenButton = new JButton(")");
+		rightParenButton.addActionListener(this);
+		rightParenButton.setPreferredSize(BUTTON_DIM);
+		rightParenButton.setFont(buttonFont);
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		buttonPanel.add(rightParenButton, gbc);
+
 		decButton = new JButton(".");
+		decButton.addActionListener(this);
 		decButton.setPreferredSize(BUTTON_DIM);
 		decButton.setFont(buttonFont);
 		gbc.gridx = 2;
@@ -84,6 +103,7 @@ public class Calculator extends JPanel implements ActionListener{
 		buttonPanel.add(decButton, gbc);
 
 		equalButton = new JButton("=");
+		equalButton.addActionListener(this);
 		equalButton.setPreferredSize(BUTTON_DIM);
 		equalButton.setFont(buttonFont);
 		gbc.gridx = 4;
@@ -124,7 +144,6 @@ public class Calculator extends JPanel implements ActionListener{
 			else
 				xPos--;
 		}
-
 	}
 
 	public void addOperatorButtons(GridBagConstraints gbc)
@@ -212,6 +231,22 @@ public class Calculator extends JPanel implements ActionListener{
 		{
 			text += "%";
 		}
+		else if (event.getSource() == clearButton)
+		{
+			text = " ";
+		}
+		else if (event.getSource() == decButton)
+		{
+			text += ".";
+		}
+		else if (event.getSource() == leftParenButton)
+		{
+			text += "(";
+		}
+		else if (event.getSource() == rightParenButton)
+		{
+			text += ")";
+		}
 		else if (event.getSource() == equalButton)
 		{
 			try{
@@ -220,12 +255,11 @@ public class Calculator extends JPanel implements ActionListener{
 			}
 			catch(Exception ex)
 			{
-				text = ex.getMessage();
+				text = "ERROR";
 			}
 		}
 		screen.setText(text);
 	} 
-
 
 	public double evaluate(String text) throws Exception
 	{
@@ -236,10 +270,8 @@ public class Calculator extends JPanel implements ActionListener{
 			return result;
 		}
 		catch(Exception ex){
-			throw new ComputationException("Format Exception");
+			throw new IllegalArgumentException("An error occurred");
 		}	
-		
-
 	}
 }
 

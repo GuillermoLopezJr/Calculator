@@ -2,6 +2,7 @@ import javax.swing.JFrame;
 import java.awt.*;
 
 public class Main{
+	
 	private static final int WIN_WIDTH = 500;
 	private static final int WIN_HEIGHT = 700;
 	
