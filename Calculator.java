@@ -3,10 +3,15 @@ import java.awt.*;
 import javax.swing.border.*;
 import java.awt.event.*;
 
+//Need to fix negative Button
+//add e^, pi, sqrt
+//add ln and log
+//add deg rad sin cos tan
+
 public class Calculator extends JPanel implements ActionListener{
 
 	private JButton[] numButtons;
-	private final int numOfButtons = 10;
+	private final int numOfButtons = 10; //0-9
 	private JButton decButton;
 	private JButton addButton;
 	private JButton subButton;
@@ -18,10 +23,13 @@ public class Calculator extends JPanel implements ActionListener{
 	private JButton clearButton;
 	private JButton leftParenButton;
 	private JButton rightParenButton;
+	private JButton xSquaredButton;
+	private JButton negButton;
 
 	private final Dimension BUTTON_DIM = new Dimension(90,90);
 	private final Font buttonFont = new Font("Serif", Font.BOLD, 24);
 	private JPanel buttonPanel, screenPanel;
+	Border buttonBorder;
 	private JLabel screen;
 	private String text = "";
 
@@ -35,6 +43,7 @@ public class Calculator extends JPanel implements ActionListener{
 	{
 		initPanels();
 		initButtons();
+		addButtonBorder();
 		initScreen();
 	}
 
@@ -45,7 +54,7 @@ public class Calculator extends JPanel implements ActionListener{
 
 		screenPanel = new JPanel();
 		screenPanel.setBorder(screenPanelBorder);
-		screenPanel.setBackground(Color.GRAY);
+		screenPanel.setBackground(Color.WHITE);
 		add(screenPanel, BorderLayout.NORTH);
 
 		buttonPanel = new JPanel();
@@ -74,6 +83,7 @@ public class Calculator extends JPanel implements ActionListener{
 		clearButton.addActionListener(this);
 		clearButton.setPreferredSize(BUTTON_DIM);
 		clearButton.setFont(buttonFont);
+		clearButton.setForeground(Color.RED);
 		gbc.gridx = 3;
 		gbc.gridy = 0;
 		buttonPanel.add(clearButton, gbc);
@@ -101,6 +111,14 @@ public class Calculator extends JPanel implements ActionListener{
 		gbc.gridx = 2;
 		gbc.gridy = 4;
 		buttonPanel.add(decButton, gbc);
+
+		negButton = new JButton("( - )");
+		negButton.addActionListener(this);
+		negButton.setPreferredSize(BUTTON_DIM);
+		negButton.setFont(buttonFont);
+		gbc.gridx = 3;
+		gbc.gridy = 4;
+		buttonPanel.add(negButton, gbc);
 
 		equalButton = new JButton("=");
 		equalButton.addActionListener(this);
@@ -188,6 +206,14 @@ public class Calculator extends JPanel implements ActionListener{
 		gbc.gridy = 3;
 		buttonPanel.add(powButton, gbc);
 
+		xSquaredButton = new JButton("x^2");
+		xSquaredButton.addActionListener(this);
+		xSquaredButton.setPreferredSize(BUTTON_DIM);
+		xSquaredButton.setFont(buttonFont);
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		buttonPanel.add(xSquaredButton, gbc);
+
 		modButton = new JButton("%");
 		modButton.addActionListener(this);
 		modButton.setPreferredSize(BUTTON_DIM);
@@ -195,6 +221,30 @@ public class Calculator extends JPanel implements ActionListener{
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		buttonPanel.add(modButton, gbc);
+	}
+
+	public void addButtonBorder()
+	{
+		buttonBorder = BorderFactory.createLineBorder(Color.BLACK,2);
+
+		for(int i = 0; i < numOfButtons; i++)
+		{
+			numButtons[i].setBorder(buttonBorder);
+		}
+
+		powButton.setBorder(buttonBorder);
+		leftParenButton.setBorder(buttonBorder);
+		rightParenButton.setBorder(buttonBorder);
+		modButton.setBorder(buttonBorder);
+		xSquaredButton.setBorder(buttonBorder);
+		addButton.setBorder(buttonBorder);
+		multButton.setBorder(buttonBorder);
+		divButton.setBorder(buttonBorder);
+		subButton.setBorder(buttonBorder);
+		equalButton.setBorder(buttonBorder);
+		decButton.setBorder(buttonBorder);
+		clearButton.setBorder(buttonBorder);
+		negButton.setBorder(buttonBorder);
 	}
 
 	public void actionPerformed(ActionEvent event) 
@@ -246,6 +296,14 @@ public class Calculator extends JPanel implements ActionListener{
 		else if (event.getSource() == rightParenButton)
 		{
 			text += ")";
+		}
+		else if(event.getSource() == xSquaredButton)
+		{
+			text += "^2";
+		}
+		else if(event.getSource() == negButton)
+		{
+			text += "";
 		}
 		else if (event.getSource() == equalButton)
 		{
