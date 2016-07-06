@@ -21,7 +21,8 @@ public class Evaluater {
 
 	public Evaluater() {
 		opStack = new Stack<String>();
-		operators = new ArrayList<String>(Arrays.asList("+", "-", "%", "^", "*", "/")); 
+        String ops[] = { "+", "-", "%", "^", "*", "/" };
+		operators = new ArrayList<String>(Arrays.asList(ops));
 
 		tokens = new ArrayList<String>();
 		precedenceTable = new HashMap<String, Integer>();
@@ -46,7 +47,8 @@ public class Evaluater {
         String postfixExpr = getPostFixExpr();
 		
 		tokens.clear();
-		addTokens(postfixExpr); //tokens are in post fix notation ie no parenthesis
+        //token list is in post fix notation
+		addTokens(postfixExpr);
 
 		double result = evaluate();
 		return result;
@@ -58,8 +60,9 @@ public class Evaluater {
 		while (st.hasMoreTokens())  {
 			String token = st.nextToken();
            	
-            if(!token.equals(" "))
+            if (!token.equals(" ")) {
             	tokens.add(token);
+            }
         }
 	}
 
@@ -79,11 +82,11 @@ public class Evaluater {
 
 				opStack.push(curToken);
 			}
-			else if ( isLeftParen(curToken) ) {
+			else if (isLeftParen(curToken)) {
 				opStack.push(curToken);
 			}
-			else if ( isRightParen(curToken) ) {
-				while ( !opStack.empty() && !isLeftParen(opStack.peek()) ) {
+			else if (isRightParen(curToken)) {
+				while (!opStack.empty() && !isLeftParen(opStack.peek())) {
 					postfixExpr += " " + opStack.pop();
                 }
 				opStack.pop(); //pop the right paren
