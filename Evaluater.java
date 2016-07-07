@@ -23,7 +23,6 @@ public class Evaluater {
         opStack = new Stack<String>();
         String ops[] = { "+", "-", "%", "^", "*", "/" };
         operators = new ArrayList<String>(Arrays.asList(ops));
-
         tokens = new ArrayList<String>();
         precedenceTable = new HashMap<String, Integer>();
         populatePrecedenceTable();
@@ -76,7 +75,8 @@ public class Evaluater {
                 postfixExpr += " " + curToken;
             }
             else if (isOperator(curToken) ) {
-                while( !opStack.empty() && !hasHigherPrecedence(curToken, opStack.peek()) && !isLeftParen(opStack.peek()) ) {
+                while (!opStack.empty() && !hasHigherPrecedence(curToken, opStack.peek())
+                        && !isLeftParen(opStack.peek()) ) {
                     postfixExpr += " " + opStack.pop();
                 }
 
